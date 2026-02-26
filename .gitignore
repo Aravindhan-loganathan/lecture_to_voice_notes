@@ -1,0 +1,29 @@
+# Node
+node_modules/
+dist/
+dist-ssr
+*.local
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Project Specific
+uploads/
+*.mp3
+*.wav
+*.m4a
+LectureAI_Notes_*.pdf
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
