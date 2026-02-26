@@ -3,6 +3,5 @@ uvicorn
 python-multipart
 google-generativeai
 langgraph
-openai-whisper
-torch
+openai
 typing_extensions

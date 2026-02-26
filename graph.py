@@ -2,14 +2,23 @@ from typing import TypedDict
 from langgraph.graph import StateGraph, END
 import google.generativeai as genai
 import os
+from openai import OpenAI
+import os
 
-import whisper
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-whisper_model = whisper.load_model("base", device="cpu")
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY not found.")
+
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 def transcribe_audio(audio_path: str) -> str:
-    result = whisper_model.transcribe(audio_path)
-    return result["text"]
+    with open(audio_path, "rb") as audio_file:
+        transcript = openai_client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file
+        )
+    return transcript.text
 # ----------------------------
 # 1️⃣ Gemini Configuration
 # ----------------------------
@@ -144,7 +153,5 @@ def build_graph():
     return graph.compile()
 
 
-# ----------------------------
-# 6️⃣ Run Test
-# ----------------------------
+
 
