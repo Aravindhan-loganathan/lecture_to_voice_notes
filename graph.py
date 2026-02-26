@@ -1,29 +1,12 @@
 from typing import TypedDict
 from langgraph.graph import StateGraph, END
+import os
+import time
 import google.generativeai as genai
-import os
-from openai import OpenAI
-import os
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY not found.")
-
-openai_client = OpenAI(api_key=OPENAI_API_KEY)
-
-def transcribe_audio(audio_path: str) -> str:
-    with open(audio_path, "rb") as audio_file:
-        transcript = openai_client.audio.transcriptions.create(
-            model="whisper-1",
-            file=audio_file
-        )
-    return transcript.text
 # ----------------------------
 # 1️⃣ Gemini Configuration
 # ----------------------------
-
-# Set your API key here OR use environment variable
 
 API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -32,11 +15,43 @@ if not API_KEY:
 
 genai.configure(api_key=API_KEY)
 
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-2.5-flash"  # Keep user's chosen model
 
 def gemini_llm(prompt: str) -> str:
+    """Helper for text-to-text calls."""
     model = genai.GenerativeModel(MODEL_NAME)
     response = model.generate_content(prompt)
+    return response.text
+
+def transcribe_audio(audio_path: str) -> str:
+    """Transcribes audio using Gemini File API."""
+    print(f"Transcribing {audio_path} via Gemini...")
+    
+    # Upload to Gemini File API
+    audio_file = genai.upload_file(path=audio_path)
+    
+    # Wait for processing to complete
+    for _ in range(30): # Timeout after 30 seconds
+        if audio_file.state.name != "PROCESSING":
+            break
+        time.sleep(1)
+        audio_file = genai.get_file(audio_file.name)
+        
+    if audio_file.state.name == "FAILED":
+        raise ValueError(f"Gemini audio processing failed: {audio_file.state.name}")
+
+    model = genai.GenerativeModel(MODEL_NAME)
+    response = model.generate_content([
+        "Please transcribe this audio exactly as it is spoken. Do not add any commentary or summaries. Output only the transcript text.",
+        audio_file
+    ])
+    
+    # Cleanup file from Gemini storage
+    try:
+        genai.delete_file(audio_file.name)
+    except Exception as e:
+        print(f"Warning: Failed to delete remote file {audio_file.name}: {e}")
+        
     return response.text
 
 # ----------------------------
