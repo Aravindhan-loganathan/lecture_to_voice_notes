@@ -100,7 +100,7 @@ const ClassPage = () => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post('https://lecture-ai.onrender.com/process_lecture', formData, {
+            const response = await axios.post('http://localhost:8000/process_lecture', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -206,7 +206,7 @@ const ClassPage = () => {
         setUserInput('');
 
         try {
-            const response = await axios.post('https://lecture-ai.onrender.com/chat', {
+            const response = await axios.post('http://localhost:8000/chat', {
                 transcript: result.transcript,
                 question: question
             });

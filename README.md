@@ -1,92 +1,137 @@
-# LectureAI - Transform Lectures into Knowledge 
+# 🎓 LectureAI – Classroom Assistant
 
-LectureAI is an advanced, AI-powered educational platform that helps students and professionals convert audio recordings of lectures or meetings into actionable study materials. By leveraging state-of-the-art AI models, it automates the process of note-taking, summarization, and self-testing.
+LectureAI is a full-stack AI-powered classroom assistant that:
 
-##  Key Features
-
--   Live Audio Recording: Capture lectures in real-time directly through the browser.
--   Audio Transcription: High-accuracy speech-to-text conversion powered by OpenAI's Whisper.
--   AI Analysis (LangGraph):
-    -   Intelligent Summarization: Context-aware bullet points extracted from the transcript.
-    -   Automatic Flashcards: Quiz yourself with AI-generated question-and-answer pairs.
-    -   Dynamic Quizzes: Test your knowledge with 5-question multiple-choice quizzes generated specifically for your lecture content.
--   Classroom Chatbot: Discuss your lecture in real-time with an AI assistant that understands the transcript.
--   Export to PDF: One-click download of your study suite (Transcript, Summary, Flashcards) in a beautifully formatted PDF.
--   Universe Theme: A premium, cosmic UI/UX designed with glassmorphism and smooth animations.
-
-##  Tech Stack
-
-### Frontend
--   React (Vite)
--   Framer Motion (Animations)
--   Lucide React (Icons)
--   Axios (API Requests)
--   jsPDF & html2canvas (PDF Generation)
--   Canvas-confetti (Gamification)
-
-### Backend
--   FastAPI (Python Server)
--   LangGraph (AI Workflow Orchestration)
--   Google Gemini 1.5 Flash (Content Generation)
--   OpenAI Whisper (Speech Recognition)
+- 🎙 Transcribes lecture audio
+- 📝 Generates structured summaries
+- 🧠 Creates flashcards
+- ❓ Generates MCQ quizzes
+- 💬 Supports lecture-based Q&A chat
 
 ---
 
-## Getting Started
+## 🚀 Tech Stack
 
-### Prerequisites
--   Python 3.9+
--   Node.js 18+
--   A Google Gemini API Key
+### Backend
+- FastAPI
+- LangGraph
+- HuggingFace Whisper (for transcription) – installed via the `openai-whisper` package
+- Google Generative AI (Gemini) as the LLM backend
+- OpenAI client (optional, not currently used but kept for future extensions)
+
+### Frontend
+- React
+- Axios
+- Framer Motion
+- jsPDF
+
+---
+
+# 🛠️ Setup Instructions
+
+---
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone <your-repo-url>
+cd lecture_to_voice_notes
 
 ### Backend Setup
-1.  Navigate to the project root:
-    ```bash
-    cd lecture-ai
-    ```
-2.  Create and activate a virtual environment:
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    ```
-3.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-4.  Set your API Key:
-    ```bash
-    # Windows PowerShell
-    $env:GEMINI_API_KEY = "your_key_here"
-    ```
-5.  Run the server:
-    ```bash
-    python server.py
-    ```
 
-### Frontend Setup
-1.  Navigate to the frontend directory:
-    ```bash
-    cd frontend
-    ```
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Run the development server:
-    ```bash
-    npm run dev
-    ```
+1. **Create a virtual environment**
 
-## Project Structure
+```bash
+python -m venv .venv
+```
 
-lecture-ai/
-├── frontend/              # React application
-│   ├── src/
-│   │   ├── assets/        # Images and assets
-│   │   ├── components/    # Reusable UI components
-│   │   └── pages/         # Page components (Home, Class, Quiz)
-├── graph.py               # LangGraph AI logic
-├── server.py              # FastAPI Backend
-└── uploads/               # Temporary folder for audio processing
+2. **Activate the environment**
 
+Windows:
+```powershell
+.venv\Scripts\activate
+```
 
+macOS / Linux:
+```bash
+source .venv/bin/activate
+```
+
+3. **Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+The requirements file includes every needed package (FastAPI, LangGraph, google-generativeai, openai-whisper, python-dotenv, requests, etc.).
+
+If the file is missing or you prefer manual installation:
+
+```bash
+pip install fastapi uvicorn langgraph requests python-dotenv openai-whisper google-generativeai
+```
+
+4. **Add environment variables**
+
+Create a `.env` file in the backend root (the server code uses python-dotenv to load it):
+
+```
+GEMINI_API_KEY=your_gemini_api_key
+# any other variables can go here, for example:
+# OPENAI_API_KEY=your_openai_key
+```
+
+Or set the variable in the system environment:
+
+```powershell
+setx GEMINI_API_KEY "your_gemini_api_key"
+```
+
+Restart your terminal for the change to take effect.
+
+> 💡 The backend will automatically load `.env` when `python-dotenv` is installed, so make sure the package is included in your environment.
+
+Step D – Run Backend
+
+```bash
+python server.py
+```
+
+The backend will start at:
+
+```
+http://localhost:8000
+```
+
+Swagger docs are available at:
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+3️⃣ **Frontend Setup**
+
+```bash
+cd frontend
+npm install
+```
+
+Create a `.env` file in the frontend directory:
+
+```
+VITE_API_URL=http://localhost:8000
+```
+
+Start the frontend development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at:
+
+```
+http://localhost:5173
+```

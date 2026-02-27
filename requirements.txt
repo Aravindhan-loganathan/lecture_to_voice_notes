@@ -5,3 +5,7 @@ google-generativeai
 langgraph
 openai
 typing_extensions
+openai-whisper
+# utilities
+python-dotenv
+requests
